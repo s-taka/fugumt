@@ -1,0 +1,47 @@
+{
+  "marian_command": "/app/marian/build/marian-server",
+  "app_root": "/app/fugu_mt/",
+  "marian_args": [
+    ["-p","8001","-c","model/model.npz.decoder.yml", "--mini-batch", "6", "--maxi-batch", "10", "--log", "log/marian8001.log"],
+    ["-p","8002","-c","model/model_uncased.npz.decoder.yml", "--mini-batch", "6", "--maxi-batch", "10", "--log", "log/marian8002.log"]
+  ],
+  "marian_args_pdf_translator": [
+    ["-p","8103","-c","model/model.npz.decoder.yml", "--mini-batch", "10", "--log", "log/marian8103_pdf.log"],
+    ["-p","8104","-c","model/model_uncased.npz.decoder.yml", "--mini-batch", "10", "--log", "log/marian8104_pdf.log"]
+  ],  "pickle_dir": "/app/fugu_mt/pickle/",
+  "webserver_marian_ports": [8001, 8002],
+  "pdf_ports": [8103, 8104],
+  "cache_dir": "/app/fugu_mt/cache/",
+  "log_dir": "/app/fugu_mt/log/",
+  "run_log_file": "/app/fugu_mt/log/run.log",
+  "run_stdout_file": "/app/fugu_mt/log/run_stdout.log",
+  "run_stderr_file": "/app/fugu_mt/log/run_stderr.log",
+  "run_pdf_stdout_file": "/app/fugu_mt/log/run_pdf_stdout.log",
+  "run_pdf_stderr_file": "/app/fugu_mt/log/run_pdf_stderr.log",
+  "db_file": "/app/fugu_mt/db/db.sqlite3",
+  "pdf_dir": "/app/fugu_mt/pdf/",
+  "sleep_sec": 10,
+  "memfile_max": 100000000,
+  "upload_limit": 100000000,
+  "template_dir": "/app/fugu_mt/template/",
+  "static_dir": "/app/fugu_mt/static/",
+  "html_templates": {
+    "index": "index.tmpl",
+    "translate": "translate.tmpl",
+    "translate_detail": "translate_detail.tmpl",
+    "translate_pdf":  "translate_pdf.tmpl",
+    "message": "message.tmpl",
+    "translate_pdf_upload": "translate_pdf_upload.tmpl"
+  },
+  "auth_info": {
+    "static": {"username": "pdf", "password": "pdf"},
+    "pdf": {"username": "pdf", "password": "pdf"},
+    "no_auth": {"username": "", "password": ""}
+  },
+  "webserver_port": 8080,
+  "webserver_host": "0.0.0.0",
+  "marian_loaded_key": "Server is listening on port",
+  "webserver_max_len_en": 5000,
+  "webserver_max_len_en_simple": 300,
+  "max_marian_memory": 1500000000
+}

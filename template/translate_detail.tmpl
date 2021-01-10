@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/favicon.ico">
+
+    <title>英語→日本語翻訳</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+  <script>
+  function show(part_id){
+  <%
+for i in range(len(candidate)):
+  %>
+  document.getElementById("translated_{{i}}").style.display ="none"
+  document.getElementById("translated_parse_{{i}}").style.display ="none"
+  <%
+end
+  %>
+    document.getElementById(part_id).style.display ="block";
+  }
+  </script>
+  <body onload="show('translated_0')">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="/">英語→日本語翻訳</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">最初に戻る<span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="jumbotron">
+        <h1>英語→日本語翻訳　翻訳結果</h1>
+        <p class="lead"><table border="1">
+        <tr><th>英語</th><th>日本語</th><th>スコア</th></tr>
+<%
+for v in translated:
+  if v['best_is_norm'] == 1:
+%>
+   <tr><td>{{v['en']}}</td> <td>{{v['ja_best']}}</td> <td>{{"{:.2f}".format(v['ja_best_score'])}}</td></tr>
+<%
+  else:
+%>
+   <tr><td>{{v['en']}}</td> <td>{{v['ja_norm']}}<small>(訳抜け防止モード参考訳: {{v['ja_best']}}</small></td> <td>{{"{:.2f}".format(v['ja_best_score'])}})</td></tr>
+<%
+  end
+end
+%>
+
+        </table></p>
+        <p class="lead"> 構築手法等、技術的な詳細は<a href="https://staka.jp/wordpress/">stakaのBlog</a>をご参照ください。</p>
+
+      </div>
+      <hr />
+    <div class="jumbotron">
+  <%
+for i in range(len(candidate)):
+  %>
+  <input type="button" value="No.{{i+1}}" onclick="show('translated_{{i}}')"> &nbsp;
+  <input type="button" value="No.{{i+1}} (訳抜け防止) " onclick="show('translated_parse_{{i}}')"> &nbsp;
+  <%
+end
+  %>
+
+
+<%
+for i in range(len(candidate)):
+  norm_translated = candidate[i]
+  parse_translated = candidate_parse[i]
+  translator_no = i + 1
+%>
+<div id='translated_{{i}}'>
+      <h2>翻訳エンジン{{translator_no}}の結果</h2>
+<table border="1">
+        <tr><th>英語</th><th>日本語</th><th>スコア</th></tr>
+<%
+  for t in norm_translated:
+    v = {'en': t[1], 'ja_best': t[2], 'ja_best_score': t[0]}
+%>
+   <tr><td>{{v['en']}}</td> <td>{{v['ja_best']}}</td> <td>{{"{:.2f}".format(v['ja_best_score'])}}</td></tr>
+<%
+  end
+%>
+        </table>
+</div>
+<div id='translated_parse_{{i}}'>
+      <h2>翻訳エンジン{{translator_no}}の結果（訳抜け防止モード）</h2>
+<table border="1">
+        <tr><th>英語</th><th>日本語</th><th>スコア</th></tr>
+<%
+  for t in parse_translated:
+    v = {'en': t[1], 'ja_best': t[2], 'ja_best_score': t[0]}
+%>
+   <tr><td>{{v['en']}}</td> <td>{{v['ja_best']}}</td> <td>{{"{:.2f}".format(v['ja_best_score'])}}</td></tr>
+<%
+  end
+%>
+        </table>
+</div>
+<%
+end
+%>
+        </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  </body>
+</html>

@@ -36,6 +36,9 @@ RUN apt-get install -y mecab libmecab-dev mecab-ipadic-utf8
 RUN pip3 install mecab-python3 unidic-lite
 
 RUN pip3 install --upgrade numpy==1.16.0 scipy==1.4.1 setuptools>=41.0.0
-RUN pip3 install tf-sentencepiece "tensorflow_hub>=0.6.0" "tensorflow>=2.0.0" tensorflow_text>=2.0.0rc0 beautifulsoup4 nltk bert-for-tf2 allennlp allennlp-models
+RUN pip3 install tf-sentencepiece "tensorflow_hub>=0.6.0" "tensorflow==2.3.0" tensorflow_text>=2.0.0rc0 nltk bert-for-tf2 allennlp allennlp-models psutil timeout-decorator
 RUN pip3 install pdfminer
+RUN pip3 install spacy
+RUN python3 -m spacy download en_core_web_sm
+RUN chmod -R 755 /app/marian/build
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/favicon.ico">
+
+    <title>英語→日本語翻訳(PDF upload)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="/">英語→日本語翻訳</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">最初に戻る<span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="jumbotron">
+        <h1>英語→日本語翻訳　PDF登録状況</h1>
+<p>{{message}}</p>
+
+<table border="1" id="pdf_list">
+  <thead>
+        <tr><th>PDF名称</th><th>ステータス</th><th>リンク</th><th>更新日</th></tr>
+  </thead>
+  <tbody>
+<%
+for tpl in status_list:
+  if tpl[2] == 'complete':
+%>      
+   <tr><td>{{tpl[0]}}</td> <td>{{tpl[2]}}</td> <td><a href="/pdf/0/{{tpl[1]}}">{{tpl[0]}}</a></td><td>{{tpl[3]}}</td></tr>     
+<%
+  else:
+%>      
+   <tr><td>{{tpl[0]}}</td> <td>{{tpl[2]}}</td> <td>&nbsp;</td><td>{{tpl[3]}}</td></tr>     
+<%
+  end
+end
+%>
+  </tbody>
+        </table>
+	            <form action="/pdf_upload" method="post" enctype="multipart/form-data" name="form_from_file">
+            <label for="file_ref" class="btn btn-primary btn-lg" id="file_select">PDFを選択
+                <input type="file" accept="application/pdf;" id="file_ref"  style="display:none;"  name="upload"
+                 onchange="document.getElementById('file_label').value = this.value.match(/[\/\\]([^\/\\]+)$/)[1];
+                           document.getElementById('file_submit').className = 'btn btn-primary btn-lg';
+                           document.getElementById('file_select').className = 'btn btn-lg';">
+            </label>
+            <input id="file_label" readonly type="text" value="" class="btn btn-lg">
+            <input type="submit" value="PDF登録"  class="btn btn-lg" id="file_submit"
+             onclick="this.value='しばらくお待ちください'; this.disabled = true;  document.form_from_file.submit()"></br>	
+
+        <p class="lead"> 構築手法等、技術的な詳細は<a href="https://staka.jp/wordpress/">stakaのBlog</a>をご参照ください。</p>
+</div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js" ></script>
+<script>
+$(document).ready(function() {
+    $('#pdf_list').DataTable({
+    order: [ [ 3, "desc" ] ]
+});
+} );
+</script>
+  </body>
+</html>
