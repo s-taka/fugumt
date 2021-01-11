@@ -17,9 +17,9 @@ Dockerがセットアップされている場合、下記のように実行で�
    - ``shasum FuguMT_ver.202011.1.zip``
      - ハッシュ値が e4437af43bc4068dafbbbe815fc792b21daf8a66 であることを確認
    - ``unzip FuguMT_ver.202011.1.zip``
-   - 解凍した場所から移動 ``mv model/* path/to/model``
+   - 解凍した場所から移動 ``mv model/* fugumt/model``
 2. Docker環境を構築
-   - ``cd docker``
+   - ``cd fugumt/docker``
    - ``docker build -t fugu_mt .``
 3. コンテナを実行
    - ``docker run -v /path_to/fugu_mt/:/app/fugu_mt -p 127.0.0.1:8888:8080 -it --user `id -u`:`id -g` --rm fugu_mt
