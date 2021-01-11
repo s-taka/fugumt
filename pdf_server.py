@@ -126,6 +126,7 @@ def do_db(db_file, pdf_dir, pickle_dir, fgmt, make_marian_conf=None, logger=None
             return pprint.pformat(sys.exc_info())
     return "Nothing to do."
 
+
 def main():
     parser = argparse.ArgumentParser(description='run fugu machine translator for pdf')
     parser.add_argument('config_file', help='config json file')

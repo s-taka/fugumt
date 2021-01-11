@@ -5,23 +5,36 @@ Fugu-Machine Translator
 で公開（予定）の機械翻訳エンジンを利用する翻訳環境です。
 フォームに入力された文字列の翻訳、PDFの翻訳が可能です。
 
+あくまで検証用の環境・ソフトウェアであり、公開サーバ上での実行を想定したものではありません。
+（上記BLOGで公開されているWEB環境で用いているソフトウェアではありません。）
+
 Usage
 ----
 Dockerがセットアップされている場合、下記のように実行できます。
 1. git clone後、model/ 以下に「」で配布されているモデルをダウンロード、展開
-   - ``git clone http://sss``
-   - ``wget http://sss``
-   - ``unzip ``
-   - ``mv ``
+   - ``git clone http://github.com/s-taka/fugumt``
+   - ``wget http://plant-check.jp:8080/static/FuguMT_ver.202011.1.zip``
+   - ``shasum FuguMT_ver.202011.1.zip``
+     - ハッシュ値が e4437af43bc4068dafbbbe815fc792b21daf8a66 であることを確認
+   - ``unzip FuguMT_ver.202011.1.zip``
+   - 解凍した場所から移動 ``mv model/* path/to/model``
 2. Docker環境を構築
    - ``cd docker``
    - ``docker build -t fugu_mt .``
 3. コンテナを実行
-   - ``docker run -v /path_to/fugu_mt/:/app/fugu_mt -p 8888:8080 -it --user `id -u`:`id -g` --rm fugu_mt
+   - ``docker run -v /path_to/fugu_mt/:/app/fugu_mt -p 127.0.0.1:8888:8080 -it --user `id -u`:`id -g` --rm fugu_mt
 python3 /app/fugu_mt/run.py /app/fugu_mt/config.json``
+   - Load completeと表示されたら実行ができています。
 
 実行後、http://localhost:8888/
 にアクセスすることで翻訳エンジンを利用可能です。
+
+http://localhost:8888/pdf_upload/
+からPDFの翻訳を行うことができます。
+パスワードはconfig.jsonの"auth_info"から設定可能です。
+デフォルトではpdf/pdfとなっています。
+
+本ソフトウェアは信頼できるネットワーク上での実行を前提に利用してください。
 
 謝辞・ライセンス
 ----
@@ -49,6 +62,8 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 * jquery(MIT-License): https://jquery.com/
 * DataTables(MIT-License): https://datatables.net/
 
+本ソフトウェアは研究用を目的に公開しています。
+作者は本ソフトウェアの動作を保証せず、本ソフトウェアを使用して発生したあらゆる結果について一切の責任を負いません。
 本ソフトウェア（Code）はMIT-Licenseです。
 
 モデル作成では上記ソフトウェアに加え、下記のデータセット・ソフトウェアを使用しています。
@@ -66,4 +81,8 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 ニューラル機械翻訳モデル「FuguMT model（URL）」は上記に独自収集データを加え作成しています。
 「FuguMT model ver.202011.1」のライセンスは[CC-BY SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.ja)
 です。
+
+本モデルは研究用を目的に公開しています。
+作者は本モデルの動作を保証せず、本モデルを使用して発生したあらゆる結果について一切の責任を負いません。
+
 ※ FuguMT model ver.202011.1ではTatoeba、CCAlignedは使用しておらず、ver.202101.1以降のモデルで使用予定です。
