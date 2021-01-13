@@ -1,8 +1,8 @@
 Fugu-Machine Translator
 ====
 
-[ぷるーふおぶこんせぷと](https://staka.jp/wordpress/)
-で公開（予定）の機械翻訳エンジンを利用する翻訳環境です。
+[ぷるーふおぶこんせぷと](https://staka.jp/wordpress/?p=413)
+で公開された機械翻訳エンジンを利用する翻訳環境です。
 フォームに入力された文字列の翻訳、PDFの翻訳が可能です。
 
 あくまで検証用の環境・ソフトウェアであり、公開サーバ上での実行を想定したものではありません。
@@ -147,7 +147,7 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 * WikiMatrix (Creative Commons Attribution-ShareAlike license):https://github.com/facebookresearch/LASER/tree/master/tasks/WikiMatrix
   * Holger Schwenk, Vishrav Chaudhary, Shuo Sun, Hongyu Gong and Paco Guzman, WikiMatrix: Mining 135M Parallel Sentences in 1620 Language Pairs from Wikipedia, arXiv, July 11 2019.
 * Tatoeba (CC BY 2.0 FR): https://tatoeba.org/jpn
-  * https://tatoeba.org TatoebaのデータはCC-BY 2.0 FRで提供されています。
+  * > https://tatoeba.org TatoebaのデータはCC-BY 2.0 FRで提供されています。
 * CCAligned (No claims of intellectual property are made on the work of preparation of the corpus. ): http://www.statmt.org/cc-aligned/
   * El-Kishky, Ahmed and Chaudhary, Vishrav and Guzm{\'a}n, Francisco and Koehn, Philipp,
     CCAligned: A Massive Collection of Cross-lingual Web-Document Pairs,
