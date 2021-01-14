@@ -2,7 +2,7 @@ Fugu-Machine Translator
 ====
 
 [ぷるーふおぶこんせぷと](https://staka.jp/wordpress/?p=413)
-で公開された機械翻訳エンジンを利用する翻訳環境です。
+で公開した機械翻訳エンジンを利用する翻訳環境です。
 フォームに入力された文字列の翻訳、PDFの翻訳が可能です。
 
 あくまで検証用の環境・ソフトウェアであり、公開サーバ上での実行を想定したものではありません。
@@ -24,8 +24,9 @@ Dockerがセットアップされている場合、下記のように実行で�
    - ``cd fugumt/docker``
    - ``docker build -t fugu_mt .``
 3. コンテナを実行
-   - ``docker run -v /path_to/fugu_mt/:/app/fugu_mt -p 127.0.0.1:8888:8080 -it --user `id -u`:`id -g` --rm fugu_mt
+   - ``docker run -v /path_to/fugumt/:/app/fugu_mt -p 127.0.0.1:8888:8080 -it --user `id -u`:`id -g` --rm fugu_mt
 python3 /app/fugu_mt/run.py /app/fugu_mt/config.json``
+   - 「/path_to」は環境に合わせて変更してください。git cloneを行った先のディレクトリを指定する必要があります。
    - Load completeと表示されたら実行ができています。
 
 実行後、http://localhost:8888/
@@ -43,8 +44,9 @@ http://localhost:8888/pdf_upload/
 より簡易にモデルを試す場合は以下の手順でテストが可能です。
 Docker build、モデルのダウンロードは「翻訳サーバの実行」と同じです。
 
-* ``docker run -v /path_to/fugu_mt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt
+* ``docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt
 bash``
+   * 「/path_to」は環境に合わせて変更してください。git cloneを行った先のディレクトリを指定する必要があります。
 * ``cd /app/fugu_mt``
 * ``echo "Fugu MT model" | /app/marian/build/marian-decoder -c model/model.npz.decoder.yml``
 
@@ -126,7 +128,7 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 * DataTables(MIT-License): https://datatables.net/
 
 本ソフトウェアは研究用を目的に公開しています。
-作者は本ソフトウェアの動作を保証せず、本ソフトウェアを使用して発生したあらゆる結果について一切の責任を負いません。
+作者（Satoshi Takahashi）は本ソフトウェアの動作を保証せず、本ソフトウェアを使用して発生したあらゆる結果について一切の責任を負いません。
 本ソフトウェア（Code）はMIT-Licenseです。
 
 モデル作成では上記ソフトウェアに加え、下記のデータセット・ソフトウェアを使用しています。
@@ -162,7 +164,9 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 です。
 
 本モデルは研究用を目的に公開しています。
-作者は本モデルの動作を保証せず、本モデルを使用して発生したあらゆる結果について一切の責任を負いません。
-
+作者（Satoshi Takahashi）は本モデルの動作を保証せず、本モデルを使用して発生したあらゆる結果について一切の責任を負いません。
 
 ※ FuguMT model ver.202011.1ではTatoeba、CCAlignedは使用しておらず、ver.202101.1以降のモデルで使用予定です。
+
+※ 出典を書く際はBlogのURL記載またはリンクをお願いします。
+ https://staka.jp/wordpress/
