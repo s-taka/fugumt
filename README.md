@@ -43,7 +43,7 @@ http://localhost:8888/pdf_upload/
 ### pdfの翻訳
 翻訳サーバの実行の2.まで構築が終わっていれば、環境変数を設定し、コマンドラインからPDFを翻訳することもできます。
 1. Dockerコンテナ起動
-   * docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt bash
+   * ``docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt bash``
 
 2. 環境変数を設定
 ```shell
