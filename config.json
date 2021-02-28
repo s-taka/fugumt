@@ -41,7 +41,7 @@
   },
   "webserver_port": 8080,
   "webserver_host": "0.0.0.0",
-  "base_url": "http://127.0.0.1/",
+  "base_url": "",
   "marian_loaded_key": "Server is listening on port",
   "webserver_max_len_en": 5000,
   "webserver_max_len_en_simple": 300,
