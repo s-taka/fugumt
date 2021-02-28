@@ -45,11 +45,12 @@ http://localhost:8888/pdf_upload/
 1. Dockerコンテナ起動
    * ``docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt bash``
 
-2. 環境変数を設定
+2. 環境変数を設定、カレントディレクトリの変更
 ```shell
 export TFHUB_CACHE_DIR=/app/fugu_mt/cache/
 export NLTK_DATA=/app/fugu_mt/cache/
 export ALLENNLP_CACHE_ROOT=/app/fugu_mt/cache/
+cd /app/fugu_mt/
 ```
 3. コマンド実行
    * ``python3 /app/fugu_mt/pdf_server.py --pdf Dockerコンテナ上のPDFパス 
