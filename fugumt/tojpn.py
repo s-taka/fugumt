@@ -30,10 +30,21 @@ def translate_marian_multi(args):
     en_text, port, timeout, retry_max, retry_wait, batch_size = args
     return translate_marian(en_text, port, timeout, retry_max, retry_wait, batch_size)
 
+def get_err_translated():
+    return [{"best_is_norm": 0,
+            "en": "err",
+            "ja_best": "翻訳エラー",
+            "ja_best_score": 0.0,
+            "ja_norm": "翻訳エラー",
+            "ja_norm_score": 0.0,
+            "ja_parse": "翻訳エラー",
+            "ja_parse_score": 0.0
+            }]
+
 
 class FuguJPNTranslator:
     def __init__(self, marian_ports, use_sentence_tokenize=True, use_constituency_parsing=True,
-                 timeout=600, retry_max=3, retry_wait=10, batch_size=5):
+                 timeout=600, retry_max=3, retry_wait=10, batch_size=5, can_translate_func=None):
         # info = "struct": {table name: [col_name: operation]}
         self.marian_ports = marian_ports
         self.global_pool = Pool(len(marian_ports))
@@ -43,6 +54,16 @@ class FuguJPNTranslator:
         self.retry_max = retry_max
         self.retry_wait = retry_wait
         self.batch_size = batch_size
+
+        def default_can_translate(en_txt):
+            if re.search("[a-zA-Z]", en_txt):
+                return True
+            else:
+                return False
+        if can_translate_func:
+            self.can_translate = can_translate_func
+        else:
+            self.can_translate = default_can_translate
 
         if use_sentence_tokenize:
             from nltk.tokenize import sent_tokenize
@@ -141,6 +162,8 @@ class FuguJPNTranslator:
         return ret
 
     def translate_text(self, text, ret_internal_data=False):
+        if len(text) == 0:
+            return []
         ret = []
         en_text = re.sub("\r?\n\r?\n", "\n\n", text)
         text_list = en_text.split("\n\n")
@@ -167,12 +190,12 @@ class FuguJPNTranslator:
                     en_sentences.append(pts)
                     idx_partitioned_idx[idx].append(partitioned_idx)
                     partitioned_idx += 1
-        # a-zA-Zが含まれていない場合はmarianへ投入除外
+        # default: can_translate a-zA-Zが含まれていない場合はmarianへ投入除外
         for_translate_tmp = []
         en_idx2translated_idx = {}
         en_sentece_with_part_length = len(en_sentences)
         for i, s in enumerate(en_sentences):
-            if re.search("[a-zA-Z]", s):
+            if self.can_translate(s):
                 en_idx2translated_idx[i] = len(for_translate_tmp)
                 for_translate_tmp.append(s)
         for_translate = "\n".join([re.sub("\r?\n$", "", s) for s in for_translate_tmp])

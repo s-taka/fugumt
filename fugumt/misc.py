@@ -17,7 +17,7 @@ from websocket import WebSocketTimeoutException
 import timeout_decorator
 
 
-@timeout_decorator.timeout(180)
+@timeout_decorator.timeout(240)
 def _translate_marian(ws, batch):
     ws.send(batch.rstrip())
     return ws.recv()
@@ -50,6 +50,7 @@ def translate_marian(en_text, port, timeout=300, retry_max=3, retry_wait=30.0, b
         except:
             retry_max += -1
             err_text += "[WARNING] Unexpected error in translate_marian retry:{}\n".format(pprint.pformat(sys.exc_info()))
+            err_text += "[WARNING] ERROR TEXT:".join(["{}\n".format(s) for s in batch.split("\n")])
             try:
                 ws.close()
             except:
@@ -132,4 +133,4 @@ def to_one_line(txt):
 
 
 def break_word(txt):
-    return re.sub('([^\s]{20,}?)', "\\1 ", txt)
+    return re.sub('([a-zA-Z0-9\/\.\-\:\%\-\~\\\*\"\'\&\$\#\(\)\?\_\,\@]{20,}?)', "\\1 ", txt)

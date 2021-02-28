@@ -51,6 +51,7 @@ def main():
     config = json.load(open(args.config_file))
 
     cache_dir = config["cache_dir"]
+    os.environ["FUGUMT_CONFIG"] = args.config_file
     os.environ["TFHUB_CACHE_DIR"] = cache_dir
     os.environ["NLTK_DATA"] = cache_dir
     os.environ["ALLENNLP_CACHE_ROOT"] = cache_dir
@@ -86,9 +87,10 @@ def main():
     # run web server
     run_stdout = open(config["run_stdout_file"], "a")
     run_stderr = open(config["run_stderr_file"], "a")
-    server_process = subprocess.Popen(["python3", "server.py"] + [args.config_file],
+    #server_process = subprocess.Popen(["python3", "server.py"] + [args.config_file],
+    #                                  stderr=run_stderr, stdout=run_stdout, encoding='utf-8', errors='ignore')
+    server_process = subprocess.Popen(["gunicorn", "-b", "0.0.0.0:8080", "-t", "300", "server:app"],
                                       stderr=run_stderr, stdout=run_stdout, encoding='utf-8', errors='ignore')
-
     # webserver process check
     wait_server_loaded(config["webserver_port"])
 

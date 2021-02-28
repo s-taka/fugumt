@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="">
+
+    <title>英語→日本語翻訳(PDF 結果)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="{{base_url}}/">英語→日本語翻訳</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{{base_url}}/">最初に戻る<span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+        <h1>英語→日本語翻訳　PDF翻訳結果</h1>
+        {{add_data}}
+<div>
+  <button id="prev">Previous</button>
+  <button id="next">Next</button>
+  &nbsp; &nbsp;
+  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+  <button onclick="document.getElementById('object_pdf').style.display ='block'; document.getElementById('for_pdf').style.display ='none';">PDFをPlug-inで表示</button> &nbsp;
+  <button onclick="show_all_translated()">訳を全て表示</button>
+</div>
+
+<table border="1"><tbody><tr><td width="50%" valign="top" align="left">
+{{translated_tables}}
+{{navigation}}
+</td>
+<td width="45%" valign="top" align="left">
+    <div id="for_pdf" style="border: solid">
+    <canvas id="the-canvas"></canvas>
+    </div>
+</td>
+</tr>
+</tbody></table>
+
+        <p class="lead"> 構築手法等、技術的な詳細は<a href="https://staka.jp/wordpress/">stakaのBlog</a>をご参照ください。</p>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.js" integrity="sha512-P/HN5l+O8ovwpe3layxRDin3RTk1kbHlnxe3KBmqqhjrVUebBE769mPVvGO5qcZGJG4uJAppkmchRMrFainTFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js" integrity="sha512-lHibs5XrZL9hXP3Dhr/d2xJgPy91f2mhVAasrSbMkbmoTSm2Kz8DuSWszBLUg31v+BM6tSiHSqT72xwjaNvl0g==" crossorigin="anonymous"></script>
+<script>
+// from https://mozilla.github.io/pdf.js/examples/
+// ©Mozilla and individual contributors
+// PDF.js is licensed under Apache, documentation is licensed under CC BY-SA 2.5
+
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+// The workerSrc property shall be specified.
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+
+var pdfDoc = null,
+    pageNum = 1,
+    pageLength = 1,
+    pageRendering = false,
+    pageNumPending = null,
+    canvas = document.getElementById('the-canvas'),
+    ctx = canvas.getContext('2d');
+
+/**
+ * Get page info from document, resize canvas accordingly, and render page.
+ * @param num Page number.
+ */
+function renderPage(num) {
+  pageRendering = true;
+  // Using promise to fetch the page
+  pdfDoc.getPage(num).then(function(page) {
+    var desiredWidth = Math.ceil(window.innerWidth * 0.45)
+    var viewport = page.getViewport({ scale: 1, });
+    var scale = desiredWidth / viewport.width;
+    var viewport = page.getViewport({scale: scale});
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    // Render PDF page into canvas context
+    var renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
+    };
+    var renderTask = page.render(renderContext);
+
+    // Wait for rendering to finish
+    renderTask.promise.then(function() {
+      pageRendering = false;
+      if (pageNumPending !== null) {
+        // New page rendering is pending
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
+    });
+  });
+
+  // Update page counters
+  document.getElementById('page_num').textContent = num;
+  // Update translated
+  for(i=1; i <= pageLength + 1; i++ ){
+    if(document.getElementById("translated_" + i)){
+      document.getElementById("translated_" + i).style.display = "none";
+    }
+  }
+  document.getElementById("translated_" + num).style.display = "block";
+  document.getElementById("nav_" + num).className = "bg-secondary";
+  document.getElementById('page_num').textContent = num;
+  pageNum = num;
+}
+
+/**
+ * If another page rendering in progress, waits until the rendering is
+ * finised. Otherwise, executes rendering immediately.
+ */
+function queueRenderPage(num) {
+  if (pageRendering) {
+    pageNumPending = num;
+  } else {
+    renderPage(num);
+  }
+}
+
+/**
+ * Displays previous page.
+ */
+function onPrevPage() {
+  if (pageNum <= 1) {
+    return;
+  }
+  pageNum--;
+  queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+
+/**
+ * Displays next page.
+ */
+function onNextPage() {
+  if (pageNum >= pdfDoc.numPages) {
+    return;
+  }
+  pageNum++;
+  queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+
+var pdfData = atob(
+  '{{base64_pdf}}');
+
+var loadingTask = pdfjsLib.getDocument({data: pdfData});
+
+loadingTask.promise.then(function(pdf) {
+  pdfDoc = pdf;
+  document.getElementById('page_count').textContent = pdfDoc.numPages;
+  pageLength = pdfDoc.numPages;
+  // Initial/first page rendering
+  renderPage(pageNum);
+});
+
+function get_for_embed_html(){
+  return '<object id="object_pdf" width="45%" height="90%" type="application/pdf" data="data:application/pdf;base64,' + btoa(pdfData) +'" style="display:none; position:fixed; top:10px; right:10px"/>';
+}
+document.write(get_for_embed_html())
+
+function show_all_translated(){
+  for(i=1; i <= pageLength + 1; i++ ){
+    if(document.getElementById("translated_" + i)){
+      document.getElementById("translated_" + i).style.display = "block";
+    }
+  }
+}
+
+</script>
+
+</body></html>

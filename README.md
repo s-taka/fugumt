@@ -13,9 +13,9 @@ Usage
 
 ### 翻訳サーバの実行
 Dockerがセットアップされている場合、下記のように実行できます。
-1. git clone後、model/ 以下に「[FuguMT model](http://plant-check.jp:8080/static/FuguMT_ver.202011.1.zip) 」で配布されているモデルをダウンロード、展開
+1. git clone後、model/ 以下に「[FuguMT model](https://fugumt.com/FuguMT_ver.202011.1.zip) 」で配布されているモデルをダウンロード、展開
    - ``git clone http://github.com/s-taka/fugumt``
-   - ``wget http://plant-check.jp:8080/static/FuguMT_ver.202011.1.zip``
+   - ``wget https://fugumt.com/FuguMT_ver.202011.1.zip``
    - ``shasum FuguMT_ver.202011.1.zip``
      - ハッシュ値が 0cf8a1fc540b4c7b4388b75b71858c0eb32e392a であることを確認
    - ``unzip FuguMT_ver.202011.1.zip``
@@ -38,6 +38,17 @@ http://localhost:8888/pdf_upload/
 デフォルトではpdf/pdfとなっています。
 
 本ソフトウェアは信頼できるネットワーク上での実行を前提に利用してください。
+
+
+### pdfの翻訳
+翻訳サーバの実行の2.まで構築が終わっていれば下記のコマンドでPDFを翻訳することができます。
+``docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt
+python3 /app/fugu_mt/pdf_server.py --pdf Dockerコンテナ上のPDFパス
+--out_html Dockerコンテナ上のHTML保存場所
+--out Dockerコンテナ上のpickle保存場所
+--mk_process
+/app/fugu_mt/config.json``
+
 
 ### marian-decoderの実行
 
@@ -115,6 +126,7 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 * mecab-python3 (Like MeCab itself, mecab-python3 is copyrighted free software by Taku Kudo taku@chasen.org and Nippon Telegraph and Telephone Corporation, and is distributed under a 3-clause BSD license ): https://github.com/SamuraiT/mecab-python3
 * unidic-lite(BSD license): https://github.com/polm/unidic-lite
 * bottle (MIT-License): https://bottlepy.org/docs/dev/
+* gunicorn (MIT License): https://github.com/benoitc/gunicorn
 * tensorflow (Apache 2.0): https://github.com/tensorflow/tensorflow
 * Universal Sentence Encoder (Apache 2.0): https://tfhub.dev/google/universal-sentence-encoder/3
 * allennlp (Apache 2.0):https://github.com/allenai/allennlp , [AllenNLP: A Deep Semantic Natural Language Processing Platform](https://www.semanticscholar.org/paper/AllenNLP%3A-A-Deep-Semantic-Natural-Language-Platform-Gardner-Grus/a5502187140cdd98d76ae711973dbcdaf1fef46d)
@@ -134,6 +146,7 @@ OSSとして素晴らしいソフトウェアを公開された方々に感謝�
 モデル作成では上記ソフトウェアに加え、下記のデータセット・ソフトウェアを使用しています。
 オープンなライセンスでソフトウェア・データセットを公開された方々に感謝いたします。
 * Beautiful Soap (MIT License): https://www.crummy.com/software/BeautifulSoup/
+* feedparser (BSD License): https://github.com/kurtmckee/feedparser
 * LaBSE (Apache 2.0): https://tfhub.dev/google/LaBSE/
   * Fangxiaoyu Feng, Yinfei Yang, Daniel Cer, Narveen Ari, Wei Wang. Language-agnostic BERT Sentence Embedding. July 2020
 * Japanese-English Subtitle Corpus (CC BY-SA 4.0): https://nlp.stanford.edu/projects/jesc/

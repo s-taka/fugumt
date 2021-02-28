@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="">
-    <link rel="icon" href="/static/favicon.ico">
 
     <title>英語→日本語翻訳</title>
 
@@ -16,17 +15,17 @@
   <body onload='document.getElementById("enja_detail").style.display ="block";document.getElementById("enja_simple").style.display ="none"'>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="/">英語→日本語翻訳</a>
+      <a class="navbar-brand" href="{{base_url}}/">英語→日本語翻訳</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/">最初に戻る<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{base_url}}/">最初に戻る<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/pdf_upload">PDF翻訳</a>
+            <a class="nav-link" href="{{base_url}}/pdf_upload">PDF翻訳</a>
           </li>
         </ul>
       </div>
@@ -38,7 +37,7 @@
         <p class="lead">{{webserver_max_len_en}}文字以内の英語の文章を日本語に翻訳します。翻訳に長い時間がかかりますが、可能な限り精度の高い翻訳を行うモードです。</p>
         <p class="lead"><input type="button" value="簡易モードへ移動" onclick='document.getElementById("enja_detail").style.display ="none";document.getElementById("enja_simple").style.display ="block"'>: 簡易モードは翻訳速度が速いモードです。</p>
         <p class="lead">
-            <form action="/en_ja_detail/" method="post" name="en_text_form2"><br />
+            <form action="{{base_url}}/en_ja_detail/" method="post" name="en_text_form2"><br />
             <textarea name="en_text" style="width:90%" rows="5"></textarea><br />
             <input type="submit" value="翻訳する"  class="btn btn-primary" id="camera_submit"
              onclick="this.value='しばらくお待ちください'; this.disabled = true; document.en_text_form2.submit()"></br>
@@ -52,7 +51,7 @@
         <p class="lead">簡易的な翻訳エンジンです。{{webserver_max_len_en_simple}}文字以内の英語の文章を日本語に翻訳します。</p>
         <p class="lead"><input type="button" value="詳細モードへ移動" onclick='document.getElementById("enja_detail").style.display ="block";document.getElementById("enja_simple").style.display ="none"'>: 詳細モードでは3000文字までの翻訳が可能です。（翻訳には長い時間がかかります）</p>
         <p class="lead">
-            <form action="/en_ja/" method="post" name="en_text_form1"><br />
+            <form action="{{base_url}}/en_ja/" method="post" name="en_text_form1"><br />
             <textarea name="en_text" style="width:90%" rows="5"></textarea><br />
             <input type="submit" value="翻訳する"  class="btn btn-primary" id="camera_submit"
              onclick="this.value='しばらくお待ちください'; this.disabled = true; document.en_text_form1.submit()"></br>

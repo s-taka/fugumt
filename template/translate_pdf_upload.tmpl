@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="">
-    <link rel="icon" href="/static/favicon.ico">
 
     <title>英語→日本語翻訳(PDF upload)</title>
 
@@ -16,14 +15,14 @@
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="/">英語→日本語翻訳</a>
+      <a class="navbar-brand" href="{{base_url}}/">英語→日本語翻訳</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/">最初に戻る<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{base_url}}/">最初に戻る<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
@@ -43,7 +42,7 @@
 for tpl in status_list:
   if tpl[2] == 'complete':
 %>      
-   <tr><td>{{tpl[0]}}</td> <td>{{tpl[2]}}</td> <td><a href="/pdf/0/{{tpl[1]}}">{{tpl[0]}}</a></td><td>{{tpl[3]}}</td></tr>     
+   <tr><td>{{tpl[0]}}</td> <td>{{tpl[2]}}</td> <td><a href="{{base_url}}/pdf/0/{{tpl[1]}}">{{tpl[0]}}</a> <br /><a href="{{base_url}}/show_pdf/{{tpl[1]}}.html">static file</a></td><td>{{tpl[3]}}</td></tr>
 <%
   else:
 %>      
@@ -54,7 +53,7 @@ end
 %>
   </tbody>
         </table>
-	            <form action="/pdf_upload" method="post" enctype="multipart/form-data" name="form_from_file">
+	            <form action="{{base_url}}/pdf_upload" method="post" enctype="multipart/form-data" name="form_from_file">
             <label for="file_ref" class="btn btn-primary btn-lg" id="file_select">PDFを選択
                 <input type="file" accept="application/pdf;" id="file_ref"  style="display:none;"  name="upload"
                  onchange="document.getElementById('file_label').value = this.value.match(/[\/\\]([^\/\\]+)$/)[1];

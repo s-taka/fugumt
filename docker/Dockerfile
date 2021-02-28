@@ -42,3 +42,5 @@ RUN pip3 install spacy
 RUN python3 -m spacy download en_core_web_sm
 RUN chmod -R 755 /app/marian/build
 
+RUN pip3 install feedparser beautifulsoup4
+RUN pip3 install gunicorn

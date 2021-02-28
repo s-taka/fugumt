@@ -20,11 +20,16 @@ import uuid
 from fugumt.misc import break_word
 from fugumt.tojpn import FuguJPNTranslator
 
-parser = argparse.ArgumentParser(description='run fugu translate server')
-parser.add_argument('config_file', help='config json file')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='run fugu translate server')
+    parser.add_argument('config_file', help='config json file')
 
-args = parser.parse_args()
-CONFIG = json.load(open(args.config_file))
+    args = parser.parse_args()
+    CONFIG = json.load(open(args.config_file))
+else:
+    config_path = os.environ['FUGUMT_CONFIG']
+    CONFIG = json.load(open(config_path))
+
 
 log_file = os.path.join(CONFIG["log_dir"], "server.log")
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO, filename=log_file)
@@ -34,7 +39,7 @@ logger.setLevel(0)
 bottle.BaseRequest.MEMFILE_MAX = CONFIG["memfile_max"]
 
 FGMT = FuguJPNTranslator(CONFIG["webserver_marian_ports"], retry_max=3, retry_wait=30.0, timeout=300)
-
+BASE_URL = CONFIG["base_url"]
 
 def read_template(filename):
     with open(filename, encoding="utf-8") as in_file:
@@ -63,7 +68,7 @@ def ret_auth_check(config, auth_idx):
 def html_index():
     tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["index"])
     return bottle.template(read_template(tmpl_file), webserver_max_len_en=CONFIG["webserver_max_len_en"]
-                           , webserver_max_len_en_simple=CONFIG["webserver_max_len_en_simple"])
+                           , webserver_max_len_en_simple=CONFIG["webserver_max_len_en_simple"], base_url=BASE_URL)
 
 
 auth_check_static = ret_auth_check(CONFIG, "static")
@@ -119,12 +124,12 @@ def show_pdf(page, pdf_name):
         page_list = [idx for idx, v in enumerate(pickle_data)]
         tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["translate_pdf"])
         return bottle.template(read_template(tmpl_file), show_data=show_data, pdf_name=pdf_name,
-                               page=page, page_list=page_list)
+                               page=page, page_list=page_list, base_url=BASE_URL)
     except:
         logger.error(pprint.pformat(sys.exc_info()))
         err_text = "Error"
         tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["message"])
-        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/")
+        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/", base_url=BASE_URL)
 
 
 # for upload
@@ -178,7 +183,8 @@ def do_upload():
                 status_list.append((row[0], row[1], row[2], row[3]))
 
         tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["message"])
-        return bottle.template(read_template(tmpl_file), message="upload:" + save_file_name, back_url="/pdf_upload")
+        return bottle.template(read_template(tmpl_file), message="upload:" + save_file_name, back_url="/pdf_upload",
+                               base_url=BASE_URL)
 
     except:
         logger.warn(pprint.pformat(sys.exc_info()))
@@ -195,7 +201,7 @@ def list_upload():
                 'SELECT pdf_name, pdf_path_name, status, date_str from status order by date_str desc;'):
             status_list.append((break_word(row[0]), row[1], row[2], row[3]))
     tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["translate_pdf_upload"])
-    return bottle.template(read_template(tmpl_file), message="", status_list=status_list)
+    return bottle.template(read_template(tmpl_file), message="", status_list=status_list, base_url=BASE_URL)
 
 
 @bottle.route("/en_ja/", method="POST")
@@ -204,13 +210,13 @@ def en_ja():
     if len(en_text) > CONFIG["webserver_max_len_en_simple"]:
         err_text = "文字数が長すぎます。{}文字以内としてください。".format(CONFIG["webserver_max_len_en_simple"])
         tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["message"])
-        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/")
+        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/", base_url=BASE_URL)
 
     FGMT.use_sentence_tokenize = False
     translated = FGMT.translate_text(en_text)
     logger.info(FGMT.get_and_clear_logs())
     tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["translate"])
-    return bottle.template(read_template(tmpl_file), show_data=translated[0])
+    return bottle.template(read_template(tmpl_file), show_data=translated[0], base_url=BASE_URL)
 
 
 @bottle.route("/en_ja_detail/", method="POST")
@@ -221,7 +227,7 @@ def en_ja_detail():
     if len(en_text) > CONFIG["webserver_max_len_en"]:
         err_text = "文字数が長すぎます。{}文字以内としてください。".format(CONFIG["webserver_max_len_en"])
         tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["message"])
-        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/")
+        return bottle.template(read_template(tmpl_file), message=err_text, back_url="/", base_url=BASE_URL)
     else:
         FGMT.use_sentence_tokenize = True
         translated, candidate, candidate_parse = FGMT.translate_text(en_text, ret_internal_data=True)
@@ -229,7 +235,7 @@ def en_ja_detail():
 
     tmpl_file = os.path.join(CONFIG["template_dir"], CONFIG["html_templates"]["translate_detail"])
     return bottle.template(read_template(tmpl_file), translated=translated, candidate=candidate,
-                           candidate_parse=candidate_parse)
+                           candidate_parse=candidate_parse, base_url=BASE_URL)
 
 
 def main():
@@ -238,3 +244,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+app = bottle.default_app()
