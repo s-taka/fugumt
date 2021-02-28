@@ -41,13 +41,22 @@ http://localhost:8888/pdf_upload/
 
 
 ### pdfの翻訳
-翻訳サーバの実行の2.まで構築が終わっていれば下記のコマンドでPDFを翻訳することができます。
-``docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt
-python3 /app/fugu_mt/pdf_server.py --pdf Dockerコンテナ上のPDFパス
---out_html Dockerコンテナ上のHTML保存場所
---out Dockerコンテナ上のpickle保存場所
---mk_process
-/app/fugu_mt/config.json``
+翻訳サーバの実行の2.まで構築が終わっていれば、環境変数を設定し、コマンドラインからPDFを翻訳することもできます。
+1. Dockerコンテナ起動
+   * docker run -v /path_to/fugumt/:/app/fugu_mt -it --user `id -u`:`id -g` --rm fugu_mt bash
+
+2. 環境変数を設定
+```shell
+export TFHUB_CACHE_DIR=/app/fugu_mt/cache/
+export NLTK_DATA=/app/fugu_mt/cache/
+export ALLENNLP_CACHE_ROOT=/app/fugu_mt/cache/
+```
+3. コマンド実行
+   * ``python3 /app/fugu_mt/pdf_server.py --pdf Dockerコンテナ上のPDFパス 
+     --out Dockerコンテナ上のpickle保存場所 
+     --out_html Dockerコンテナ上のHTML保存場所
+     --mk_process 1 
+     /app/fugu_mt/config.json``
 
 
 ### marian-decoderの実行
